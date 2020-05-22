@@ -28,9 +28,12 @@ const _usersReducer = createReducer(initialState,
         ...state,
         loading: false,
         loaded: false,
-        key: [ ...payload ]
+        error: {
+            url: payload.url,
+            name: payload.name,
+            message: payload.message
+        }
     })),
-
 );
 
 export function usersReducer(state, action) {
