@@ -1,38 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { UsuarioService } from '../../services/usuario.service';
+
 import { Usuario } from '../../models/usuario.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.reducer';
-import { getUsers } from '../../store/actions/users.actions';
+import { cargarUsuarios } from '../../store/actions';
 
 @Component({
-    selector: 'app-lista',
-    templateUrl: './lista.component.html',
-    styles: []
+  selector: 'app-lista',
+  templateUrl: './lista.component.html',
+  styles: []
 })
 export class ListaComponent implements OnInit {
 
-    usuarios: Usuario[] = [];
+  usuarios: Usuario[] = [];
+  loading: boolean = false;
+  error: any;
 
-    constructor(public usuarioService: UsuarioService,
-                private store: Store<AppState>) { }
+  constructor( private store: Store<AppState>) { }
 
-    ngOnInit() {
-        this.store.select('users')
-            .subscribe( ({users}) => {
-                console.log(users);
-                this.usuarios = users;
-            });
+  ngOnInit() {
 
-        this.store.dispatch( getUsers())
+    this.store.select('users').subscribe( ({ users, loading, error }) => {
+      this.usuarios = users;
+      this.loading  = loading;
+      this.error    = error;
+    });
 
 
-   /*  this.usuarioService.getUsers()
-        .subscribe(users => {
-            console.log(users);
-            this.usuarios = users;
-        }); */
+    this.store.dispatch( cargarUsuarios() );
 
-    }
+    // this.usuarioService.getUsers()
+    //     .subscribe( users => {
+    //       console.log(users);
+    //       this.usuarios = users;
+    //     });
+
+  }
 
 }

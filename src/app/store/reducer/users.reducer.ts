@@ -1,31 +1,35 @@
 import { createReducer, on } from '@ngrx/store';
-import * as actionsUsers from '../actions';
+import { cargarUsuarios, cargarUsuariosError, cargarUsuariosSuccess } from '../actions';
 import { Usuario } from '../../models/usuario.model';
 
-export interface UsersState {
+export interface UsuariosState {
     users  : Usuario[],
-    loaded: boolean,
+    loaded : boolean,
     loading: boolean,
-    error : any
+    error  : any
 }
 
-export const initialState: UsersState = {
-    users: [],
-    loaded: false,
+export const usuariosInitialState: UsuariosState = {
+    users  : [],
+    loaded : false,
     loading: false,
-    error : null
+    error  : null
 }
 
-const _usersReducer = createReducer(initialState,
-    on(actionsUsers.getUsers, state => ({ ...state, loading: true})),
-    on(actionsUsers.getUsersSuccess, (state, { users }) => ({ 
-        ...state,
+const _usuariosReducer = createReducer(usuariosInitialState,
+
+    on( cargarUsuarios, state => ({ ...state, loading: true })),
+    
+    
+    on( cargarUsuariosSuccess, (state, { usuarios }) => ({ 
+        ...state, 
         loading: false,
         loaded: true,
-        users: [ ...users ]
+        users: [ ...usuarios ] 
     })),
-    on(actionsUsers.getUsersError, (state, { payload }) => ({ 
-        ...state,
+
+    on( cargarUsuariosError, (state, { payload }) => ({ 
+        ...state, 
         loading: false,
         loaded: false,
         error: {
@@ -34,8 +38,12 @@ const _usersReducer = createReducer(initialState,
             message: payload.message
         }
     })),
+
+
+
+
 );
 
-export function usersReducer(state, action) {
-    return _usersReducer(state, action);
+export function usuariosReducer(state, action) {
+    return _usuariosReducer(state, action);
 }
